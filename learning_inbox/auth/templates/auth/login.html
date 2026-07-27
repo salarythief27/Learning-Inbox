@@ -8,9 +8,37 @@
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <h1 class="h3 mb-3">ログイン</h1>
-                <p class="text-secondary mb-0">
-                    ログイン機能は次の実装で追加します。
-                </p>
+                <form method="post" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.login_id.label(class="form-label") }}
+                        {{ form.login_id(
+                            class="form-control" + (
+                                " is-invalid" if form.login_id.errors else ""
+                            ),
+                            autocomplete="username"
+                        ) }}
+                        {% for error in form.login_id.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(
+                            class="form-control" + (
+                                " is-invalid" if form.password.errors else ""
+                            ),
+                            autocomplete="current-password"
+                        ) }}
+                        {% for error in form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    {{ form.submit(class="btn btn-primary w-100") }}
+                </form>
             </div>
         </div>
     </div>

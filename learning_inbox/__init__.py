@@ -2,8 +2,9 @@ from pathlib import Path
 
 from flask import Flask, redirect, url_for
 
+from learning_inbox.commands import register_commands
 from learning_inbox.config import Config
-from learning_inbox.extensions import db, login_manager
+from learning_inbox.extensions import csrf, db, login_manager
 
 
 def create_app(config_class=Config):
@@ -15,6 +16,10 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     login_manager.init_app(app)
+    csrf.init_app(app)
+
+    # create_all()がモデルを認識できるように読み込みます。
+    from learning_inbox import models
 
     from learning_inbox.auth import auth_bp
     from learning_inbox.dashboard import dashboard_bp
@@ -25,6 +30,7 @@ def create_app(config_class=Config):
     app.register_blueprint(tasks_bp)
     app.register_blueprint(projects_bp)
     app.register_blueprint(dashboard_bp)
+    register_commands(app)
 
     @app.route("/")
     def index():
