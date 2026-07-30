@@ -2,6 +2,7 @@ from datetime import date
 
 from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from sqlalchemy import or_
 
 from learning_inbox.extensions import db
 from learning_inbox.models import Project, Task
@@ -9,9 +10,16 @@ from learning_inbox.tasks import tasks_bp
 from learning_inbox.tasks.forms import (
     DeleteTaskForm,
     TASK_PRIORITY_LABELS,
+    TASK_STATUS_CHOICES,
     TASK_STATUS_LABELS,
     TaskForm,
 )
+
+TASK_SORT_CHOICES = [
+    ("newest", "作成日時が新しい順"),
+    ("oldest", "作成日時が古い順"),
+    ("due_date", "期限が近い順"),
+]
 
 
 def get_owned_task_or_404(task_id):
@@ -64,17 +72,124 @@ def set_completed_date(task, status, completed_date):
 @tasks_bp.route("/")
 @login_required
 def index():
-    tasks = db.session.scalars(
-        db.select(Task)
+    keyword = request.args.get("keyword", "").strip()
+    status = request.args.get("status", "")
+    project_value = request.args.get("project", "")
+    category = request.args.get("category", "")
+    show_completed_value = request.args.get("show_completed", "")
+    sort = request.args.get("sort", "newest")
+
+    projects = db.session.scalars(
+        db.select(Project)
+        .where(
+            Project.user_id == current_user.id,
+            Project.is_deleted.is_(False),
+        )
+        .order_by(Project.name)
+    ).all()
+    categories = db.session.scalars(
+        db.select(Task.category)
         .where(
             Task.user_id == current_user.id,
             Task.is_deleted.is_(False),
+            Task.category.is_not(None),
+            Task.category != "",
         )
-        .order_by(Task.created_at.desc())
+        .distinct()
+        .order_by(Task.category)
     ).all()
+
+    allowed_statuses = {value for value, label in TASK_STATUS_CHOICES}
+    allowed_sorts = {value for value, label in TASK_SORT_CHOICES}
+    allowed_project_ids = {project.id for project in projects}
+
+    if len(keyword) > 100:
+        abort(400, description="キーワードは100文字以内で指定してください。")
+    if status and status not in allowed_statuses:
+        abort(400, description="不正な状態が指定されました。")
+    if category and category not in categories:
+        abort(400, description="不正なカテゴリが指定されました。")
+    if show_completed_value not in {"", "1"}:
+        abort(400, description="完了済みタスクの表示条件が不正です。")
+    if sort not in allowed_sorts:
+        abort(400, description="不正な並び順が指定されました。")
+
+    selected_project_id = None
+    if project_value not in {"", "none"}:
+        try:
+            selected_project_id = int(project_value)
+        except ValueError:
+            abort(400, description="不正なプロジェクトが指定されました。")
+        if selected_project_id not in allowed_project_ids:
+            abort(400, description="不正なプロジェクトが指定されました。")
+        project_value = str(selected_project_id)
+
+    statement = db.select(Task).where(
+        Task.user_id == current_user.id,
+        Task.is_deleted.is_(False),
+    )
+
+    if keyword:
+        escaped_keyword = (
+            keyword.replace("\\", "\\\\")
+            .replace("%", "\\%")
+            .replace("_", "\\_")
+        )
+        keyword_pattern = f"%{escaped_keyword}%"
+        statement = statement.where(
+            or_(
+                Task.title.ilike(keyword_pattern, escape="\\"),
+                Task.details.ilike(keyword_pattern, escape="\\"),
+            )
+        )
+
+    if status:
+        if status == "not_started":
+            statement = statement.where(Task.status.in_(["not_started", "todo"]))
+        else:
+            statement = statement.where(Task.status == status)
+
+    show_completed = show_completed_value == "1"
+    if not show_completed and status != "completed":
+        statement = statement.where(Task.status != "completed")
+
+    if project_value == "none":
+        statement = statement.where(Task.project_id.is_(None))
+    elif selected_project_id is not None:
+        statement = statement.where(Task.project_id == selected_project_id)
+
+    if category:
+        statement = statement.where(Task.category == category)
+
+    if sort == "oldest":
+        statement = statement.order_by(Task.created_at.asc())
+    elif sort == "due_date":
+        statement = statement.order_by(
+            Task.due_date.is_(None).asc(),
+            Task.due_date.asc(),
+            Task.created_at.desc(),
+        )
+    else:
+        statement = statement.order_by(Task.created_at.desc())
+
+    tasks = db.session.scalars(statement).all()
+    filters = {
+        "keyword": keyword,
+        "status": status,
+        "project": project_value,
+        "category": category,
+        "show_completed": show_completed,
+        "sort": sort,
+    }
+
     return render_template(
         "tasks/index.html",
         tasks=tasks,
+        projects=projects,
+        categories=categories,
+        filters=filters,
+        status_choices=TASK_STATUS_CHOICES,
+        sort_choices=TASK_SORT_CHOICES,
         status_labels=TASK_STATUS_LABELS,
         priority_labels=TASK_PRIORITY_LABELS,
     )
