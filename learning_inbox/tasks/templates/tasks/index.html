@@ -3,8 +3,60 @@
 {% block title %}タスク | Learning Inbox{% endblock %}
 
 {% block content %}
-<h1 class="h2 mb-3">タスク</h1>
-<p class="text-secondary mb-0">
-    タスク一覧は次の機能実装で追加します。
-</p>
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">タスク</h1>
+        <p class="text-secondary mb-0">学習する内容をタスクとして管理します。</p>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="{{ url_for('tasks.create') }}">
+            タスクを登録
+        </a>
+    </div>
+</div>
+
+{% if tasks %}
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">タイトル</th>
+                    <th scope="col">プロジェクト</th>
+                    <th scope="col">カテゴリ</th>
+                    <th scope="col">状態</th>
+                    <th scope="col">優先度</th>
+                    <th scope="col">期限</th>
+                    <th scope="col">作成日時</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('tasks.detail', task_id=task.id) }}">
+                                {{ task.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if task.project and not task.project.is_deleted %}
+                                {{ task.project.name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ task.category or "" }}</td>
+                        <td>{{ status_labels.get(task.status, task.status) }}</td>
+                        <td>{{ priority_labels.get(task.priority, task.priority) }}</td>
+                        <td>
+                            {{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "" }}
+                        </td>
+                        <td>{{ task.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        タスクはまだありません。「タスクを登録」から作成してください。
+    </div>
+{% endif %}
 {% endblock %}

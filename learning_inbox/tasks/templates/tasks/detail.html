@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.title }} | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">{{ task.title }}</h1>
+        <p class="text-secondary mb-0">
+            {{ status_labels.get(task.status, task.status) }}
+        </p>
+    </div>
+    <div>
+        <a
+            class="btn btn-outline-secondary"
+            href="{{ url_for('tasks.edit', task_id=task.id) }}"
+        >
+            編集
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">詳細・メモ</dt>
+            <dd class="col-sm-9 task-details">
+                {{ task.details or "詳細・メモはありません。" }}
+            </dd>
+
+            <dt class="col-sm-3">プロジェクト</dt>
+            <dd class="col-sm-9">
+                {% if task.project and not task.project.is_deleted %}
+                    <a href="{{ url_for('projects.detail', project_id=task.project.id) }}">
+                        {{ task.project.name }}
+                    </a>
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-3">カテゴリ</dt>
+            <dd class="col-sm-9">{{ task.category or "" }}</dd>
+
+            <dt class="col-sm-3">状態</dt>
+            <dd class="col-sm-9">
+                {{ status_labels.get(task.status, task.status) }}
+            </dd>
+
+            <dt class="col-sm-3">優先度</dt>
+            <dd class="col-sm-9">
+                {{ priority_labels.get(task.priority, task.priority) }}
+            </dd>
+
+            <dt class="col-sm-3">期限</dt>
+            <dd class="col-sm-9">
+                {{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "未設定" }}
+            </dd>
+
+            <dt class="col-sm-3">完了日</dt>
+            <dd class="col-sm-9">
+                {{ task.completed_date.strftime("%Y-%m-%d") if task.completed_date else "未設定" }}
+            </dd>
+
+            <dt class="col-sm-3">作成日時</dt>
+            <dd class="col-sm-9">
+                {{ task.created_at.strftime("%Y-%m-%d %H:%M") }}
+            </dd>
+
+            <dt class="col-sm-3">更新日時</dt>
+            <dd class="col-sm-9">
+                {{ task.updated_at.strftime("%Y-%m-%d %H:%M") }}
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="border-top pt-4">
+    <form
+        method="post"
+        action="{{ url_for('tasks.delete', task_id=task.id) }}"
+        onsubmit="return confirm('このタスクを削除しますか？');"
+    >
+        {{ delete_form.hidden_tag() }}
+        {{ delete_form.submit(class="btn btn-outline-danger") }}
+    </form>
+</div>
+{% endblock %}

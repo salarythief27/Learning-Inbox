@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}タスク登録 | Learning Inbox{% endblock %}
+{% block title %}タスク編集 | Learning Inbox{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-9">
-        <h1 class="h2 mb-4">タスク登録</h1>
+        <h1 class="h2 mb-4">タスク編集</h1>
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                {% set cancel_url = url_for("tasks.index") %}
+                {% set cancel_url = url_for("tasks.detail", task_id=task.id) %}
                 {% include "tasks/_form.html" %}
             </div>
         </div>

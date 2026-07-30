@@ -80,7 +80,7 @@ def register_commands(app):
                 "title": "JOINの種類を復習する",
                 "details": "INNER JOINとOUTER JOINの違いを整理します。",
                 "category": "SQL",
-                "status": "todo",
+                "status": "not_started",
                 "priority": "high",
             },
             {
@@ -88,7 +88,7 @@ def register_commands(app):
                 "title": "模擬問題を30問解く",
                 "details": "間違えた問題は理由も記録します。",
                 "category": "SQL",
-                "status": "todo",
+                "status": "not_started",
                 "priority": "medium",
             },
             {
@@ -96,7 +96,7 @@ def register_commands(app):
                 "title": "FlaskのBlueprintについて調べる",
                 "details": "機能ごとに処理を分ける仕組みを確認します。",
                 "category": "Python",
-                "status": "todo",
+                "status": "not_started",
                 "priority": "medium",
             },
         ]

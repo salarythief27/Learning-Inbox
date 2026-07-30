@@ -65,8 +65,14 @@
             <tbody>
                 {% for task in tasks %}
                     <tr>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.status }}</td>
+                        <td>
+                            <a href="{{ url_for('tasks.detail', task_id=task.id) }}">
+                                {{ task.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ task_status_labels.get(task.status, task.status) }}
+                        </td>
                         <td>
                             {{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "未設定" }}
                         </td>

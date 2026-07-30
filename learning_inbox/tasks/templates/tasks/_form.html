@@ -1,0 +1,109 @@
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(
+            class="form-control" + (" is-invalid" if form.title.errors else ""),
+            autofocus=true
+        ) }}
+        {% for error in form.title.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.details.label(class="form-label") }}
+        {{ form.details(
+            class="form-control" + (" is-invalid" if form.details.errors else ""),
+            rows=5
+        ) }}
+        {% for error in form.details.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.project_id.label(class="form-label") }}
+            {{ form.project_id(
+                class="form-select" + (
+                    " is-invalid" if form.project_id.errors else ""
+                )
+            ) }}
+            {% for error in form.project_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(
+                class="form-control" + (
+                    " is-invalid" if form.category.errors else ""
+                )
+            ) }}
+            {% for error in form.category.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(
+                class="form-select" + (" is-invalid" if form.status.errors else "")
+            ) }}
+            {% for error in form.status.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form.priority.label(class="form-label") }}
+            {{ form.priority(
+                class="form-select" + (
+                    " is-invalid" if form.priority.errors else ""
+                )
+            ) }}
+            {% for error in form.priority.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.due_date.label(class="form-label") }}
+            {{ form.due_date(
+                class="form-control" + (
+                    " is-invalid" if form.due_date.errors else ""
+                )
+            ) }}
+            {% for error in form.due_date.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form.completed_date.label(class="form-label") }}
+            {{ form.completed_date(
+                class="form-control" + (
+                    " is-invalid" if form.completed_date.errors else ""
+                )
+            ) }}
+            <div class="form-text">
+                状態が完了で空欄の場合は、保存時に当日を設定します。
+            </div>
+            {% for error in form.completed_date.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a class="btn btn-outline-secondary" href="{{ cancel_url }}">キャンセル</a>
+    </div>
+</form>

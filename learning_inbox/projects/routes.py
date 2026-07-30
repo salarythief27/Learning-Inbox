@@ -9,6 +9,7 @@ from learning_inbox.projects.forms import (
     PROJECT_STATUS_LABELS,
     ProjectForm,
 )
+from learning_inbox.tasks.forms import TASK_STATUS_LABELS
 
 
 def get_owned_project_or_404(project_id):
@@ -86,6 +87,7 @@ def detail(project_id):
         project=project,
         tasks=get_active_tasks(project),
         status_labels=PROJECT_STATUS_LABELS,
+        task_status_labels=TASK_STATUS_LABELS,
         delete_form=DeleteProjectForm(),
     )
 

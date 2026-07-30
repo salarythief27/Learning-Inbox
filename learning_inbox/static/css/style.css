@@ -16,7 +16,8 @@ body {
     border: 0;
 }
 
-.project-description {
+.project-description,
+.task-details {
     white-space: pre-wrap;
 }
 
