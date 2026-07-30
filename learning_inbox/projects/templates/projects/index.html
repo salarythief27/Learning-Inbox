@@ -3,8 +3,54 @@
 {% block title %}プロジェクト | Learning Inbox{% endblock %}
 
 {% block content %}
-<h1 class="h2 mb-3">プロジェクト</h1>
-<p class="text-secondary mb-0">
-    プロジェクト一覧は次の機能実装で追加します。
-</p>
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">プロジェクト</h1>
+        <p class="text-secondary mb-0">学習目標をプロジェクト単位で管理します。</p>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="{{ url_for('projects.create') }}">
+            プロジェクトを登録
+        </a>
+    </div>
+</div>
+
+{% if project_rows %}
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">プロジェクト名</th>
+                    <th scope="col">状態</th>
+                    <th scope="col">目標期限</th>
+                    <th scope="col">所属タスク数</th>
+                    <th scope="col">作成日時</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in project_rows %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('projects.detail', project_id=row.project.id) }}">
+                                {{ row.project.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ status_labels.get(row.project.status, row.project.status) }}
+                        </td>
+                        <td>
+                            {{ row.project.target_date.strftime("%Y-%m-%d") if row.project.target_date else "未設定" }}
+                        </td>
+                        <td>{{ row.task_count }}</td>
+                        <td>{{ row.project.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        プロジェクトはまだありません。「プロジェクトを登録」から作成してください。
+    </div>
+{% endif %}
 {% endblock %}

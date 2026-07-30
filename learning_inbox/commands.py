@@ -53,7 +53,7 @@ def register_commands(app):
                 user=demo_user,
                 name="SQL Silver取得",
                 description="SQL Silverの取得に向けた学習を管理します。",
-                status="active",
+                status="in_progress",
             )
             db.session.add(sql_project)
             db.session.flush()
@@ -69,7 +69,7 @@ def register_commands(app):
                 user=demo_user,
                 name="Python Webアプリ学習",
                 description="Flaskを使ったWebアプリ開発の学習を管理します。",
-                status="active",
+                status="in_progress",
             )
             db.session.add(python_project)
             db.session.flush()

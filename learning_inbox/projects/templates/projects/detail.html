@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name }} | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">{{ project.name }}</h1>
+        <p class="text-secondary mb-0">
+            {{ status_labels.get(project.status, project.status) }}
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a
+            class="btn btn-primary"
+            href="{{ url_for('tasks.create', project_id=project.id) }}"
+        >
+            このプロジェクトでタスクを登録
+        </a>
+        <a
+            class="btn btn-outline-secondary"
+            href="{{ url_for('projects.edit', project_id=project.id) }}"
+        >
+            編集
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">説明</dt>
+            <dd class="col-sm-9 project-description">
+                {{ project.description or "説明はありません。" }}
+            </dd>
+
+            <dt class="col-sm-3">目標期限</dt>
+            <dd class="col-sm-9">
+                {{ project.target_date.strftime("%Y-%m-%d") if project.target_date else "未設定" }}
+            </dd>
+
+            <dt class="col-sm-3">作成日時</dt>
+            <dd class="col-sm-9">
+                {{ project.created_at.strftime("%Y-%m-%d %H:%M") }}
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">所属タスク</h2>
+    <span class="text-secondary">{{ tasks|length }}件</span>
+</div>
+
+{% if tasks %}
+    <div class="table-responsive bg-white shadow-sm rounded mb-4">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">タスク名</th>
+                    <th scope="col">状態</th>
+                    <th scope="col">期限</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>
+                            {{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "未設定" }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        このプロジェクトに所属するタスクはありません。
+    </div>
+{% endif %}
+
+<div class="border-top pt-4">
+    <form
+        method="post"
+        action="{{ url_for('projects.delete', project_id=project.id) }}"
+        onsubmit="return confirm('このプロジェクトを削除しますか？所属タスクは削除されません。');"
+    >
+        {{ delete_form.hidden_tag() }}
+        {{ delete_form.submit(class="btn btn-outline-danger") }}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}プロジェクト登録 | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h2 mb-4">プロジェクト登録</h1>
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                {% set cancel_url = url_for("projects.index") %}
+                {% include "projects/_form.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

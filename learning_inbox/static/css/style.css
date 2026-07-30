@@ -16,6 +16,10 @@ body {
     border: 0;
 }
 
+.project-description {
+    white-space: pre-wrap;
+}
+
 @media (max-width: 575.98px) {
     .main-content {
         padding-right: 1rem;

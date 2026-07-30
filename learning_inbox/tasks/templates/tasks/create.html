@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}タスク登録 | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h2 mb-4">タスク登録</h1>
+        <div class="alert alert-info" role="alert">
+            タスク登録フォームは次の機能実装で追加します。
+        </div>
+
+        {% if project %}
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <span class="text-secondary">選択中のプロジェクト</span>
+                    <p class="h5 mb-0">{{ project.name }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

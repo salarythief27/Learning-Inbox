@@ -1,0 +1,56 @@
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(
+            class="form-control" + (" is-invalid" if form.name.errors else ""),
+            autofocus=true
+        ) }}
+        {% for error in form.name.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(
+            class="form-control" + (
+                " is-invalid" if form.description.errors else ""
+            ),
+            rows=5
+        ) }}
+        {% for error in form.description.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(
+                class="form-select" + (" is-invalid" if form.status.errors else "")
+            ) }}
+            {% for error in form.status.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form.target_date.label(class="form-label") }}
+            {{ form.target_date(
+                class="form-control" + (
+                    " is-invalid" if form.target_date.errors else ""
+                )
+            ) }}
+            {% for error in form.target_date.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a class="btn btn-outline-secondary" href="{{ cancel_url }}">キャンセル</a>
+    </div>
+</form>
