@@ -3,20 +3,111 @@
 {% block title %}ダッシュボード | Learning Inbox{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h2 mb-1">ダッシュボード</h1>
-        <p class="text-secondary mb-0">
-            学習状況をここに表示していきます。
-        </p>
+<div class="mb-4">
+    <h1 class="h2 mb-1">ダッシュボード</h1>
+    <p class="text-secondary mb-0">
+        {{ current_user.login_id }}さんの学習状況です。
+    </p>
+</div>
+
+<div class="row g-3 mb-5">
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">全タスク</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="all-tasks">
+                    {{ counts.all_tasks }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">未着手</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="not-started">
+                    {{ counts.not_started }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">学習中</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="in-progress">
+                    {{ counts.in_progress }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">完了</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="completed">
+                    {{ counts.completed }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">期限超過</p>
+                <p class="display-6 fw-semibold text-danger mb-0" data-summary="overdue">
+                    {{ counts.overdue }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">進行中プロジェクト</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="active-projects">
+                    {{ counts.active_projects }}
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="card shadow-sm">
-    <div class="card-body p-4">
-        <p class="mb-0">
-            ようこそ、{{ current_user.login_id }}さん。
-        </p>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">最近作成した項目</h2>
+    <a href="{{ url_for('tasks.index') }}">タスク一覧を見る</a>
 </div>
+
+{% if recent_items %}
+    <div class="list-group shadow-sm">
+        {% for item in recent_items %}
+            <a
+                class="list-group-item list-group-item-action"
+                href="{{ item.url }}"
+            >
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                    <div>
+                        <span class="badge text-bg-primary me-2">
+                            {{ item.type_label }}
+                        </span>
+                        <span class="fw-semibold">{{ item.title }}</span>
+                    </div>
+                    <small class="text-secondary">
+                        {{ item.created_at.strftime("%Y-%m-%d %H:%M") }}
+                    </small>
+                </div>
+                <small class="text-secondary">{{ item.status_label }}</small>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        最近作成したタスクはありません。
+    </div>
+{% endif %}
 {% endblock %}
