@@ -11,6 +11,9 @@ def create_app(config_class=Config):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_class)
 
+    if not app.config.get("SECRET_KEY"):
+        raise RuntimeError("SECRET_KEYが設定されていません。")
+
     # SQLiteファイルを置くinstanceフォルダを作成します。
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
