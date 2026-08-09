@@ -6,7 +6,8 @@ from sqlalchemy import func
 
 from learning_inbox.dashboard import dashboard_bp
 from learning_inbox.extensions import db
-from learning_inbox.models import Project, Task
+from learning_inbox.models import Project, Question, Task
+from learning_inbox.questions.forms import QUESTION_STATUS_LABELS
 from learning_inbox.tasks.forms import TASK_STATUS_LABELS
 
 
@@ -39,6 +40,13 @@ def index():
                 Project.status.in_(["in_progress", "active"]),
             )
         ),
+        "unresolved_questions": db.session.scalar(
+            db.select(func.count(Question.id)).where(
+                Question.user_id == current_user.id,
+                Question.is_deleted.is_(False),
+                Question.status == "unresolved",
+            )
+        ),
     }
 
     recent_tasks = db.session.scalars(
@@ -61,8 +69,20 @@ def index():
         for task in recent_tasks
     ]
 
+    recent_questions = db.session.scalars(
+        db.select(Question)
+        .where(
+            Question.user_id == current_user.id,
+            Question.is_deleted.is_(False),
+        )
+        .order_by(Question.updated_at.desc())
+        .limit(5)
+    ).all()
+
     return render_template(
         "dashboard/index.html",
         counts=counts,
         recent_items=recent_items,
+        recent_questions=recent_questions,
+        question_status_labels=QUESTION_STATUS_LABELS,
     )

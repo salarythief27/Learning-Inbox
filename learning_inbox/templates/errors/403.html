@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}アクセスできません | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="error-page text-center bg-white shadow-sm rounded p-4 p-md-5">
+    <p class="error-code text-secondary mb-2">403</p>
+    <h1 class="h2 mb-3">このページにはアクセスできません</h1>
+    <p class="text-secondary mb-4">
+        この操作を行う権限がありません。
+    </p>
+    <a class="btn btn-primary" href="{{ url_for('index') }}">トップページへ戻る</a>
+</div>
+{% endblock %}

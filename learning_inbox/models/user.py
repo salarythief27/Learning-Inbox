@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
 
     projects = db.relationship("Project", back_populates="user")
     tasks = db.relationship("Task", back_populates="user")
+    questions = db.relationship("Question", back_populates="user")
 
     def __repr__(self):
         return f"<User id={self.id} login_id={self.login_id!r}>"

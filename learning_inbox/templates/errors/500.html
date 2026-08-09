@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}エラーが発生しました | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="error-page text-center bg-white shadow-sm rounded p-4 p-md-5">
+    <p class="error-code text-secondary mb-2">500</p>
+    <h1 class="h2 mb-3">エラーが発生しました</h1>
+    <p class="text-secondary mb-4">
+        しばらく時間を置いてから、もう一度お試しください。
+    </p>
+    <a class="btn btn-primary" href="{{ url_for('index') }}">トップページへ戻る</a>
+</div>
+{% endblock %}

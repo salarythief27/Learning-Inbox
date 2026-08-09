@@ -2,7 +2,7 @@ import click
 from werkzeug.security import generate_password_hash
 
 from learning_inbox.extensions import db
-from learning_inbox.models import Project, Task, User
+from learning_inbox.models import Project, Question, Task, User
 
 
 def register_commands(app):
@@ -110,6 +110,31 @@ def register_commands(app):
             )
             if existing_task is None:
                 db.session.add(Task(user=demo_user, **task_data))
+
+        sample_questions = [
+            {
+                "title": "Flaskのsessionはどこに保存されるのか",
+                "answer": "Flaskの標準sessionは署名付きCookieとしてクライアント側に保存される。",
+                "category": "Flask",
+                "status": "resolved",
+            },
+            {
+                "title": "SQLAlchemyのcommitは何をしているのか",
+                "answer": None,
+                "category": "Python",
+                "status": "unresolved",
+            },
+        ]
+
+        for question_data in sample_questions:
+            existing_question = db.session.scalar(
+                db.select(Question).where(
+                    Question.user_id == demo_user.id,
+                    Question.title == question_data["title"],
+                )
+            )
+            if existing_question is None:
+                db.session.add(Question(user=demo_user, **question_data))
 
         db.session.commit()
         click.echo("デモデータを作成しました。")

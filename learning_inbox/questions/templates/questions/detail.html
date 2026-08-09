@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ question.title }} | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+    <div>
+        <span class="badge text-bg-info mb-2">ギモン</span>
+        <h1 class="h2 mb-1">{{ question.title }}</h1>
+        {% if question.status == "resolved" %}
+            <span class="badge text-bg-success">解決済み</span>
+        {% else %}
+            <span class="badge text-bg-warning">未解決</span>
+        {% endif %}
+    </div>
+    <div>
+        <a class="btn btn-outline-secondary" href="{{ url_for('questions.edit', question_id=question.id) }}">
+            編集
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">回答</dt>
+            <dd class="col-sm-9 question-text">
+                {{ question.answer or "まだ回答は登録されていません。" }}
+            </dd>
+
+            <dt class="col-sm-3">補足メモ</dt>
+            <dd class="col-sm-9 question-text">
+                {{ question.notes or "補足メモはありません。" }}
+            </dd>
+
+            <dt class="col-sm-3">カテゴリ</dt>
+            <dd class="col-sm-9">{{ question.category or "未設定" }}</dd>
+
+            <dt class="col-sm-3">状態</dt>
+            <dd class="col-sm-9">{{ status_labels.get(question.status, question.status) }}</dd>
+
+            <dt class="col-sm-3">作成日時</dt>
+            <dd class="col-sm-9">{{ question.created_at.strftime("%Y-%m-%d %H:%M") }}</dd>
+
+            <dt class="col-sm-3">更新日時</dt>
+            <dd class="col-sm-9">{{ question.updated_at.strftime("%Y-%m-%d %H:%M") }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-3 border-top pt-4">
+    <a href="{{ url_for('questions.index') }}">一覧へ戻る</a>
+    <form
+        method="post"
+        action="{{ url_for('questions.delete', question_id=question.id) }}"
+        onsubmit="return confirm('このギモンを削除しますか？');"
+    >
+        {{ delete_form.hidden_tag() }}
+        {{ delete_form.submit(class="btn btn-outline-danger") }}
+    </form>
+</div>
+{% endblock %}

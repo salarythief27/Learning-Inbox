@@ -76,6 +76,17 @@
             </div>
         </div>
     </div>
+
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-2">未解決ギモン</p>
+                <p class="display-6 fw-semibold mb-0" data-summary="unresolved-questions">
+                    {{ counts.unresolved_questions }}
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -108,6 +119,39 @@
 {% else %}
     <div class="alert alert-info" role="alert">
         最近作成したタスクはありません。
+    </div>
+{% endif %}
+
+<div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+    <h2 class="h4 mb-0">最近更新したギモン</h2>
+    <a href="{{ url_for('questions.index') }}">ギモン一覧を見る</a>
+</div>
+
+{% if recent_questions %}
+    <div class="list-group shadow-sm">
+        {% for question in recent_questions %}
+            <a
+                class="list-group-item list-group-item-action"
+                href="{{ url_for('questions.detail', question_id=question.id) }}"
+            >
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                    <div>
+                        <span class="badge text-bg-info me-2">ギモン</span>
+                        <span class="fw-semibold">{{ question.title }}</span>
+                    </div>
+                    <small class="text-secondary">
+                        {{ question.updated_at.strftime("%Y-%m-%d %H:%M") }}
+                    </small>
+                </div>
+                <small class="text-secondary">
+                    {{ question_status_labels.get(question.status, question.status) }}
+                </small>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        最近更新したギモンはありません。
     </div>
 {% endif %}
 {% endblock %}

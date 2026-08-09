@@ -1,0 +1,67 @@
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(
+            class="form-control" + (" is-invalid" if form.title.errors else ""),
+            maxlength="200"
+        ) }}
+        {% for error in form.title.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.answer.label(class="form-label") }}
+        {{ form.answer(
+            class="form-control" + (" is-invalid" if form.answer.errors else ""),
+            rows="7",
+            maxlength="5000"
+        ) }}
+        {% for error in form.answer.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        <div class="form-text">調査途中の場合は空欄でも保存できます。</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form.notes.label(class="form-label") }}
+        {{ form.notes(
+            class="form-control" + (" is-invalid" if form.notes.errors else ""),
+            rows="4",
+            maxlength="5000"
+        ) }}
+        {% for error in form.notes.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(
+                class="form-control" + (" is-invalid" if form.category.errors else ""),
+                maxlength="50"
+            ) }}
+            {% for error in form.category.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(
+                class="form-select" + (" is-invalid" if form.status.errors else "")
+            ) }}
+            {% for error in form.status.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a class="btn btn-outline-secondary" href="{{ cancel_url }}">キャンセル</a>
+    </div>
+</form>

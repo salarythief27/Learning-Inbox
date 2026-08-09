@@ -17,8 +17,20 @@ body {
 }
 
 .project-description,
-.task-details {
+.task-details,
+.question-text {
     white-space: pre-wrap;
+}
+
+.error-page {
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.error-code {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 @media (max-width: 575.98px) {

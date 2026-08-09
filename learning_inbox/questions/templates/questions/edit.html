@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}ギモン編集 | Learning Inbox{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h2 mb-4">ギモン編集</h1>
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                {% set cancel_url = url_for("questions.detail", question_id=question.id) %}
+                {% include "questions/_form.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
