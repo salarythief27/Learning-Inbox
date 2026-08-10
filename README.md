@@ -53,21 +53,34 @@ PythonとFlaskを使ったWebアプリ開発の流れを理解し、就職活動
 
 ## 画面イメージ
 
-画面画像は`docs/images/`へ配置します。
+### ダッシュボード
 
-掲載予定の画像：
+タスクやプロジェクト、未解決ギモンの状況を確認できます。
 
-- `docs/images/login.png`：ログイン画面
-- `docs/images/dashboard.png`：ダッシュボード
-- `docs/images/tasks.png`：タスク一覧
-- `docs/images/projects.png`：プロジェクト一覧
-- `docs/images/questions.png`：ギモン一覧
-
-画像を追加した後、次のようにREADMEへ掲載できます。
-
-```markdown
 ![ダッシュボード](docs/images/dashboard.png)
-```
+![ダッシュボード2](docs/images/dashboard2.png)
+
+### タスク一覧
+
+検索、絞り込み、並べ替えを同時に利用できます。
+
+![タスク一覧](docs/images/tasks.png)
+
+### プロジェクト一覧
+
+長期的な学習目標と所属タスク数を確認できます。
+
+![プロジェクト一覧](docs/images/projects.png)
+
+### ギモン一覧
+
+疑問、回答、解決状況を記録できます。
+
+![ギモン一覧](docs/images/questions.png)
+
+### レスポンシブデザイン
+
+![縦画面時ダッシュボード](docs/images/responsive.png)
 
 ## セットアップ手順
 
